@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Welcome To YemekSepette</title>
+	<style>
+body {
+	background-image: url(http://i.hizliresim.com/jVv2O9.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+}
+</style>
+
+</h:head>
+<h:body>
+	<h:form id="form" style="font: italic bold 14px Georgia, serif;">
+		<img src="http://i.hizliresim.com/zrmb8j.png"
+			style="width: 700px; height: 120px; padding-left: 400px;" />
+		<p:growl id="growl" life="4000" />
+		<p:fieldset toggleable="true" toggleSpeed="500" legend="Order"
+			style="width:600px; margin:70px auto;" id="field">
+			<h:panelGrid columns="4" id="grid" cellpadding="5">
+				<p:outputPanel>
+					<p:selectOneMenu filter="true" id="resName"
+						value="#{orderBean.selectedRestaurants}">
+						<f:selectItem itemLabel="Restaurant Name" />
+						<f:selectItems value="#{orderBean.restaurantsList}" />
+						<f:ajax listener="#{orderBean.handleSelectRestaurant}" />
+					</p:selectOneMenu>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{orderBean.mealView}">
+					<p:selectOneMenu filter="true" id="mealName"
+						value="#{orderBean.selectedMeals}">
+						<f:selectItem itemLabel="Meal Name" />
+						<f:selectItems value="#{orderBean.mealsList}" />
+						<f:ajax update="form" />
+					</p:selectOneMenu>
+				</p:outputPanel>
+
+				<p:outputPanel rendered="#{orderBean.mealView}">
+					<p:selectOneMenu filter="true" id="drinkName"
+						value="#{orderBean.selectedDrinks}">
+						<f:selectItem itemLabel="Drink Name" />
+						<f:selectItems value="#{orderBean.drinksList}" />
+						<f:ajax update="form" />
+					</p:selectOneMenu>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{orderBean.mealView}">
+					<p:commandButton value="Complete Order" id="completeOrder"
+						icon="ui-icon-circle-check"
+						actionListener="#{orderBean.buttonAction}" update="form"
+						oncomplete="PF('orderDialog').show()" />
+				</p:outputPanel>
+			</h:panelGrid>
+
+		</p:fieldset>
+		<p:commandButton value="Previous Order" id="previousOrder"
+			actionListener="#{prevOrderBean.getAllOrdersViaView}"
+			icon="ui-icon-cart" style="width:160px; margin:auto 910px;"
+			oncomplete="PF('preOrderDialog').show()" update="form" />
+
+		<p:dialog id="dia" header="Order Info" widgetVar="orderDialog"
+			modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+			<p:outputPanel id="productDetail" style="text-align:center;">
+				<p:panelGrid columns="2" columnClasses="label,value">
+
+					<h:outputText value="Restaurant Name:" />
+					<h:outputText value="#{orderBean.selectedRestaurants}" />
+
+					<h:outputText value="Meal" />
+					<h:outputText value="#{orderBean.selectedMeals}" />
+
+					<h:outputText value="Drink" />
+					<h:outputText value="#{orderBean.selectedDrinks}" />
+
+				</p:panelGrid>
+			</p:outputPanel>
+		</p:dialog>
+		<p:dialog id="dia2" header="Previous Orders Info"
+			widgetVar="preOrderDialog" modal="true" showEffect="fade"
+			hideEffect="fade" resizable="false">
+			<p:dataTable id="orderTable" var="order" style="width:1200px; font:14px Arial, serif;"
+				value="#{prevOrderBean.orders}" selectionMode="single"
+				rowKey="#{order.orderId}" rows="10" paginator="true"
+				paginatorPosition="bottom">
+
+				<p:column headerText="Order Id" style="	">
+					<h:outputText value="#{order.orderId}" style="width:20px" />
+				</p:column>
+				<p:column headerText="Restaurant Name">
+					<h:outputText value="#{order.restaurantName}" />
+				</p:column>
+				<p:column headerText="Order Meal">
+					<h:outputText value="#{order.mealName}" />
+				</p:column>
+				<p:column headerText="Order Drink">
+					<h:outputText value="#{order.drinkName}" />
+				</p:column>
+				<p:column headerText="Order Note">
+					<h:outputText value="#{order.orderNote}" />
+				</p:column>
+				<p:column headerText="Debit">
+					<h:outputText value="#{order.debit}" />
+				</p:column>
+				<p:column headerText="Order Time">
+					<h:outputText value="#{order.orderTime}" />
+				</p:column>
+
+			</p:dataTable>
+
+
+
+
+		</p:dialog>
+
+	</h:form>
+</h:body>
+</html>
